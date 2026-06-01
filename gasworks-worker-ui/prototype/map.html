@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>詳細画面 - Gasworks Prototype</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- Leaflet CSS: APIキー不要で高度なカスタマイズが可能な地図ライブラリ -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Leaflet Routing Machine CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+    <style>
+        /* カスタムマーカー（START/END/数字）のスタイル */
+        .custom-div-icon {
+            background: #00d4ff; /* 指定の鮮やかなガスブルー */
+            border: 2px solid white;
+            border-radius: 50%;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .bg-start { background-color: #0d6efd !important; } /* STARTは青 */
+        .bg-end { background-color: #dc3545 !important; }   /* ENDは赤 */
+
+        /* ルート案内パネル（テキスト表示）を非表示にする */
+        .leaflet-routing-container {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <svg xmlns="http://www.w3.org/2003/svg" width="24" height="24" fill="currentColor" class="bi bi-fire text-primary me-2" viewBox="0 0 16 16" style="vertical-align: text-bottom;"><path d="M8 16c3.314 0 6-2 6-5.5 0-1.5-.5-4-2.5-6 .25 1.5-1.25 2-1.25 2C11 4 9 .5 6 0c.357 2 .5 4-2 6-1.25 1-2 2.729-2 4.5C2 14 4.686 16 8 16m0-1c-1.657 0-3-1-3-2.75 0-.75.25-2 1.25-3C6.125 10 7 10.5 7 10.5c-.375-1.25.5-3.25 2-3.5-.179 1-.25 2 1 3 .625.5 1 1.364 1 2.25C11 14 9.657 15 8 15"/></svg>Gasworks
+            </a>
+        </div>
+    </nav>
+    <div class="container text-center mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4 text-start">
+            <h3>
+                本日の巡回ルート
+                <span id="current-datetime" class="fs-6 text-muted fw-normal ms-3"></span>
+            </h3>
+            <a href="index.html" class="btn btn-outline-secondary text-end">戻る</a>
+        </div>
+        <div class="card shadow-sm overflow-hidden">
+            <div id="map" style="height: 400px; width: 100%;"></div>
+            <div class="card-footer bg-white text-start">
+                <div class="row text-center py-2">
+                    <div class="col-4 border-end">
+                        <small class="text-muted">残り件数</small><br><span class="fw-bold fs-5">4件</span>
+                    </div>
+                    <div class="col-4 border-end">
+                        <small class="text-muted">予定時間</small><br><span class="fw-bold fs-5">120分</span>
+                    </div>
+                    <div class="col-4 text-primary font-weight-bold">
+                        <small class="text-muted">最短ルート</small><br><span class="fw-bold fs-5">計算済</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Leaflet Routing Machine JS -->
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 現在の日時を表示
+            const now = new Date();
+            const dateStr = now.getFullYear() + '/' + 
+                            String(now.getMonth() + 1).padStart(2, '0') + '/' + 
+                            String(now.getDate()).padStart(2, '0');
+            const timeStr = String(now.getHours()).padStart(2, '0') + ':' + 
+                            String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('current-datetime').textContent = dateStr + ' ' + timeStr;
+
+            // 巡回ルートの座標データ
+            const start = [35.6585805, 139.7013303]; // 渋谷駅
+            const p1 = [35.6605, 139.6980];
+            const p2 = [35.6620, 139.7000];
+            const end = [35.6640351, 139.6982119];   // 渋谷区役所
+            const routePath = [start, p1, p2, end];
+
+            // 地図の初期化 (OpenStreetMapのタイルを使用)
+            const map = L.map('map').setView(start, 15);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Leaflet Routing Machine を使用して道路沿いのルートを描画
+            L.Routing.control({
+                waypoints: [
+                    L.latLng(start),
+                    L.latLng(p1),
+                    L.latLng(p2),
+                    L.latLng(end)
+                ],
+                router: L.Routing.osrmv1({
+                    serviceUrl: 'https://router.project-osrm.org/route/v1'
+                }),
+                lineOptions: {
+                    styles: [{ color: '#00d4ff', opacity: 0.8, weight: 6 }]
+                },
+                createMarker: function(i, wp, n) {
+                    let label = '';
+                    let className = '';
+                    if (i === 0) {
+                        label = 'START';
+                        className = 'bg-start';
+                    } else if (i === n - 1) {
+                        label = 'END';
+                        className = 'bg-end';
+                    } else {
+                        label = i.toString();
+                    }
+                    
+                    const isMain = label === 'START' || label === 'END';
+                    const size = isMain ? 44 : 28;
+                    return L.marker(wp.latLng, {
+                        icon: L.divIcon({
+                            className: `custom-div-icon ${className}`,
+                            html: `<span style="font-size:${isMain ? '10px' : '14px'}">${label}</span>`,
+                            iconSize: [size, size],
+                            iconAnchor: [size/2, size/2]
+                        })
+                    });
+                },
+                addWaypoints: false,
+                routeWhileDragging: false,
+                draggableWaypoints: false,
+                fitSelectedRoutes: true,
+                show: false // ルート案内パネルを非表示
+            }).addTo(map);
+        });
+    </script>
+</body>
+</html>

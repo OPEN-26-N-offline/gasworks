@@ -1,0 +1,46 @@
+```plantuml
+@startuml
+!theme plain
+
+node "GasWorks System (Root Directory)" {
+
+    rectangle "フロントエンド層 (Frontend Layer)" as FrontendGroup {
+        package "Project 1: gasworks" {
+          [作業員向けUI\n(Spring Boot/Thymeleaf)] as WorkerUI
+        }
+        package "Project 2: gasworks-admin-ui" {
+          [管理者向けUI\n(Django)] as AdminUI
+        }
+    }
+
+    ' ホームページUIを独立した枠（hexagon）で別だし
+    hexagon "Project 5: gasworks-worker-ui" as PublicUIBox {
+      [ホームページUI\n(React Hooks / TypeScript)] as PublicUI
+    }
+
+    ' --- ここがバックとフロントの仕切り線になります ---
+
+    rectangle "バックエンド & データ層 (Backend & Data Layer)" as BackendGroup {
+        package "Project 3: gasworks-api" {
+          [RestFulAPI\n(Spring Boot)] as API
+        }
+        package "Project 4: gasworks-batch" {
+          [バッチ処理専用\n(Spring Batch)] as Batch
+        }
+        database "MySQL (Shared DB)" as DB
+    }
+
+    ' ドキュメントは囲わずに配置
+    [DOCUMENT フォルダ\n　　（各種仕様書）] as Docs
+}
+
+WorkerUI --> API : "HTTP/REST"
+AdminUI --> API : "HTTP/REST"
+PublicUI --> API : "HTTP/REST"
+API --> DB : "JDBC"
+Batch --> DB : "JDBC"
+
+' レイアウト調整：ホームページを左側・下方向に配置するためのヒント
+FrontendGroup -[hidden]down-> PublicUIBox
+@enduml
+```

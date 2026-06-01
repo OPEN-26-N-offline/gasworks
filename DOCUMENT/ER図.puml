@@ -1,0 +1,50 @@
+```plantuml
+@startuml
+!theme plain
+
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+entity "users" as users {
+  * id: BIGINT <<PK>>
+  --
+  * name: VARCHAR(255)
+  * email: VARCHAR(255) <<UK>>
+  * password: VARCHAR(255)
+  * role: VARCHAR(50) -- 'ADMIN', 'WORKER'
+  --
+  * created_at: TIMESTAMP
+  * updated_at: TIMESTAMP
+}
+
+entity "customers" as customers {
+  * id: BIGINT <<PK>>
+  --
+  * name: VARCHAR(255)
+  * address: VARCHAR(255)
+  * contact: VARCHAR(50)
+  --
+  * created_at: TIMESTAMP
+  * updated_at: TIMESTAMP
+}
+
+entity "meter_readings" as meter_readings {
+  * id: BIGINT <<PK>>
+  --
+  * customer_id: BIGINT <<FK>>
+  * user_id: BIGINT <<FK>>
+  * reading_date: DATE
+  * value: DECIMAL(10, 2)
+  --
+  * created_at: TIMESTAMP
+  * updated_at: TIMESTAMP
+}
+
+' Relationships
+customers ||--o{ meter_readings : "has"
+users ||--o{ meter_readings : "records"
+
+@enduml

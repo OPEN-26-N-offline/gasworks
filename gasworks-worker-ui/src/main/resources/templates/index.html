@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ポータル - Gasworks</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-primary mb-4">
+        <div class="container-fluid px-md-5">
+            <a class="navbar-brand fw-bold" th:href="@{/}">GASWORKS</a>
+        </div>
+    </nav>
+    <div class="container-fluid px-md-5">
+        <h2 class="mb-4">業務メニュー</h2>
+        <div class="row g-4">
+            <!-- 1. 担当顧客一覧 -->
+            <div class="col-6">
+                <div class="card h-100 border-primary text-center shadow-sm">
+                    <div class="card-body py-4">
+                        <h5 class="card-title fw-bold">担当顧客一覧</h5>
+                        <p class="card-text small text-muted">本日の検針対象を確認</p>
+                        <a th:href="@{/customers}" class="btn btn-primary stretched-link">開く</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 2. ルートマップ -->
+            <div class="col-6">
+                <div class="card h-100 text-center shadow-sm">
+                    <div class="card-body py-4">
+                        <h5 class="card-title fw-bold">巡回ルート</h5>
+                        <p class="card-text small text-muted">効率的な巡回経路を表示</p>
+                        <a th:href="@{/map}" class="btn btn-outline-primary stretched-link">表示</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 3. お知らせ -->
+            <div class="col-6">
+                <div class="card h-100 text-center shadow-sm">
+                    <div class="card-body py-4">
+                        <h5 class="card-title fw-bold">お知らせ</h5>
+                        <p class="card-text small text-muted">本部からの指示事項</p>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span>
+                        <a th:href="@{/notifications}" class="btn btn-outline-primary stretched-link">確認</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 4. 同期・送信 -->
+            <div class="col-6">
+                <div class="card h-100 text-center shadow-sm">
+                    <div class="card-body py-4">
+                        <h5 class="card-title text-success fw-bold">日報作成・同期</h5>
+                        <p class="card-text small text-muted">本日の作業報告を送信</p>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">提出済</span>
+                        <a th:href="@{/sync}" class="btn btn-outline-success stretched-link">実行</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 5. 緊急連絡 -->
+            <div class="col-6">
+                <div class="card h-100 border-danger text-center shadow-sm">
+                    <div class="card-body py-4">
+                        <h5 class="card-title text-danger fw-bold">緊急連絡</h5>
+                        <p class="card-text small text-muted">事故・トラブル報告</p>
+                        <a th:href="@{/emergency}" class="btn btn-danger stretched-link">通報</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 6. 設定・個人 -->
+            <div class="col-6">
+                <div class="card h-100 text-center shadow-sm">
+                    <div class="card-body py-4">
+                        <h5 class="card-title fw-bold">個人設定</h5>
+                        <p class="card-text small text-muted">アプリ設定・ログアウト</p>
+                        <a th:href="@{/settings}" class="btn btn-outline-secondary stretched-link">設定</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex align-items-center justify-content-center mt-5 mb-4">
+            <div class="h5 fw-bold text-dark mx-4 mb-0 text-nowrap">安全なガスインフラの供給を通じて、</div>
+            <img th:src="@{/gasworks_footer.png}" alt="Footer Logo" class="img-fluid" style="width: 35%; max-width: 800px; height: auto; opacity: 0.8;">
+            <div class="h5 fw-bold text-dark mx-4 mb-0 text-nowrap">豊かで持続可能な未来を支える。</div>
+        </div>
+        <div class="text-center text-muted small pb-4">
+            GasWorksのライセンス
+        </div>
+    </div>
+</body>
+</html>

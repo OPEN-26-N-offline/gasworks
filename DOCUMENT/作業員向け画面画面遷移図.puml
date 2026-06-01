@@ -1,0 +1,26 @@
+```plantuml
+@startuml
+!theme plain
+
+state "未ログイン" as NotLoggedIn
+state "ログイン済み" as LoggedIn
+
+state "ログイン画面" as Login
+state "担当顧客一覧画面" as CustomerList
+state "検針データ入力画面" as MeterReadingInput
+state "マイページ画面" as MyPage
+
+[*] --> NotLoggedIn
+NotLoggedIn --> Login : "アクセス"
+
+Login --> LoggedIn : "ログイン成功"
+LoggedIn --> CustomerList : "初期表示"
+
+CustomerList --> MeterReadingInput : "顧客を選択"
+MeterReadingInput --> CustomerList : "登録完了"
+CustomerList --> MyPage : "メニューから選択"
+MyPage --> CustomerList : "戻る"
+LoggedIn --> Login : "ログアウト"
+
+@enduml
+```
