@@ -1,5 +1,4 @@
-```plantuml
-@startuml
+@startuml ER図
 !theme plain
 
 ' hide the spot
