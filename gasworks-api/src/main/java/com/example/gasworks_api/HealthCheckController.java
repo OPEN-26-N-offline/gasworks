@@ -1,4 +1,5 @@
-package com.givery.gasworks.api.controller;
+/*
+package com.example.gasworks_api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,3 +17,4 @@ public class HealthCheckController {
         return Map.of("status", "UP", "message", "GasWorks API is running");
     }
 }
+*/
