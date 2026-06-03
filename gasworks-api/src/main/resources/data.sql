@@ -1,7 +1,7 @@
--- テスト用ユーザー（作業員と管理者）
-INSERT INTO users (name, email, password, role) VALUES
-    ('山田 太郎', 'yamada@example.com', 'hashed_password_123', 'WORKER'),
-    ('佐藤 一郎', 'sato@example.com', 'hashed_password_456', 'ADMIN');
+INSERT INTO notification (title, summary, content, category, published_at, created_at, updated_at) VALUES
+('【重要】台風接近に伴う作業中止の判断について', '台風接近に伴う対応について', '本日の午後以降の検針作業は、天候の状況により各自の判断で...', 'IMPORTANT', '2024-07-26 10:00:00', '2024-07-26 09:00:00', '2024-07-26 09:00:00'),
+('新システム移行に伴うマニュアル公開', '新システムマニュアルについて', '来月からの新メーター導入に伴い、操作手順書が更新されました。', 'INFO', '2024-07-25 15:00:00', '2024-07-25 14:00:00', '2024-07-25 14:00:00'),
+('モバイルバッテリー配布のお知らせ', 'バッテリー配布開始のお知らせ', '各支社にて新しい大容量バッテリーの配布を開始しました。', 'ADMIN', '2024-07-23 10:00:00', '2024-07-23 09:00:00', '2024-07-23 09:00:00');
 
 -- テスト用顧客情報
 INSERT INTO customers (name, address, contact) VALUES
@@ -9,5 +9,5 @@ INSERT INTO customers (name, address, contact) VALUES
     ('浪速 ガス子', '大阪府大阪市北区...', '06-3333-4444');
 
 -- テスト用検針データ（東京ガス男さんのメーターを、山田作業員が検針したデータ）
-INSERT INTO meter_readings (customer_id, user_id, reading_date, `value`) VALUES -- ★ ここを `value` に変更！
+INSERT INTO meter_readings (customer_id, user_id, reading_date, `value`) VALUES
     (1, 1, '2026-06-01', 123.45);

@@ -1,37 +1,111 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>担当顧客一覧 - Gasworks</title>
+    <title>担当顧客一覧 - Gasworks Prototype</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
-<body>
+<body class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
         <div class="container">
-            <a class="navbar-brand" th:href="@{/}">Gasworks</a>
+            <a class="navbar-brand fw-bold" href="index.html">
+                <svg xmlns="http://www.w3.org/2003/svg" width="24" height="24" fill="currentColor" class="bi bi-fire text-primary me-2" viewBox="0 0 16 16" style="vertical-align: text-bottom;"><path d="M8 16c3.314 0 6-2 6-5.5 0-1.5-.5-4-2.5-6 .25 1.5-1.25 2-1.25 2C11 4 9 .5 6 0c.357 2 .5 4-2 6-1.25 1-2 2.729-2 4.5C2 14 4.686 16 8 16m0-1c-1.657 0-3-1-3-2.75 0-.75.25-2 1.25-3C6.125 10 7 10.5 7 10.5c-.375-1.25.5-3.25 2-3.5-.179 1-.25 2 1 3 .625.5 1 1.364 1 2.25C11 14 9.657 15 8 15"/></svg>Gasworks
+            </a>
         </div>
     </nav>
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>担当顧客一覧</h2>
-            <a th:href="@{/}" class="btn btn-outline-secondary">戻る</a>
+            <h3>担当顧客一覧</h3>
+            <a th:href="@{/menu}" class="btn btn-outline-secondary">戻る</a>
         </div>
-        <table class="table table-striped table-hover mt-4">
-            <thead class="table-light">
-                <tr>
-                    <th>顧客名</th>
-                    <th>住所</th>
-                    <th>ステータス</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="customer : ${customers}">
-                    <td th:text="${customer.name}"></td>
-                    <td th:text="${customer.address}"></td>
-                    <td><span class="badge bg-info text-dark" th:text="${customer.status}"></span></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="card shadow-sm">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>顧客名 / 住所</th>
+                            <th>型式 / 前回値</th>
+                            <th>ステータス</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>田中 太郎</strong><br><small class="text-muted">東京都渋谷区桜丘町1-1</small></td>
+                            <td>N型<br><small class="text-muted">125.4 m³</small></td>
+                            <td><span class="badge bg-secondary">未検針</span></td>
+                            <td><a href="inspection.html" class="btn btn-sm btn-primary">入力</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>株式会社 渋谷第一ビル</strong><br><small class="text-muted">東京都渋谷区道玄坂2-2 (裏口入館)</small></td>
+                            <td>E型<br><small class="text-muted">88.2 m³</small></td>
+                            <td><span class="badge bg-success">検針済</span></td>
+                            <td><a href="inspection.html?mode=edit" class="btn btn-sm btn-outline-primary">修正</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>桜丘メゾン管理組合</strong><br><small class="text-muted">東京都目黒区大橋3-3 (オートロック)</small></td>
+                            <td>N型<br><small class="text-muted">210.0 m³</small></td>
+                            <td><span class="badge bg-secondary">未検針</span></td>
+                            <td><a href="inspection.html" class="btn btn-sm btn-primary">入力</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>佐藤 美紀</strong><br><small class="text-muted">東京都渋谷区道玄坂1-5-9</small></td>
+                            <td>N型<br><small class="text-muted">45.2 m³</small></td>
+                            <td><span class="badge bg-secondary">未検針</span></td>
+                            <td><a href="inspection.html" class="btn btn-sm btn-primary">入力</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>有限会社 恵比寿ベーカリー</strong><br><small class="text-muted">東京都渋谷区恵比寿4-2-1</small></td>
+                            <td>E型<br><small class="text-muted">312.8 m³</small></td>
+                            <td><span class="badge bg-success">検針済</span></td>
+                            <td><a href="inspection.html?mode=edit" class="btn btn-sm btn-outline-primary">修正</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>高橋 健一</strong><br><small class="text-muted">東京都目黒区青葉台1-10</small></td>
+                            <td>N型<br><small class="text-muted">15.0 m³</small></td>
+                            <td><span class="badge bg-secondary">未検針</span></td>
+                            <td><a href="inspection.html" class="btn btn-sm btn-primary">入力</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>代官山テラス自治会</strong><br><small class="text-muted">東京都渋谷区代官山町15-1</small></td>
+                            <td>E型<br><small class="text-muted">0.0 m³</small></td>
+                            <td><span class="badge bg-secondary">未検針</span></td>
+                            <td><a href="inspection.html" class="btn btn-sm btn-primary">入力</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>伊藤 幸子</strong><br><small class="text-muted">東京都渋谷区神南1-20</small></td>
+                            <td>N型<br><small class="text-muted">92.4 m³</small></td>
+                            <td><span class="badge bg-success">検針済</span></td>
+                            <td><a href="inspection.html?mode=edit" class="btn btn-sm btn-outline-primary">修正</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>レストラン・セゾン</strong><br><small class="text-muted">東京都渋谷区宇田川町30 (厨房立入)</small></td>
+                            <td>E型<br><small class="text-muted">520.1 m³</small></td>
+                            <td><span class="badge bg-secondary">未検針</span></td>
+                            <td><a href="inspection.html" class="btn btn-sm btn-primary">入力</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>中村 浩</strong><br><small class="text-muted">東京都目黒区駒場4-1 (門扉施錠)</small></td>
+                            <td>N型<br><small class="text-muted">68.7 m³</small></td>
+                            <td><span class="badge bg-secondary">未検針</span></td>
+                            <td><a href="inspection.html" class="btn btn-sm btn-primary">入力</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>渡辺 直樹</strong><br><small class="text-muted">東京都目黒区下目黒2-3-4</small></td>
+                            <td>N型<br><small class="text-muted">55.0 m³</small></td>
+                            <td><span class="badge bg-secondary">未検針</span></td>
+                            <td><a href="inspection.html" class="btn btn-sm btn-primary">入力</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>渋谷センター商店街振興組合</strong><br><small class="text-muted">東京都渋谷区宇田川町12-1</small></td>
+                            <td>E型<br><small class="text-muted">1020.5 m³</small></td>
+                            <td><span class="badge bg-success">検針済</span></td>
+                            <td><a href="inspection.html?mode=edit" class="btn btn-sm btn-outline-primary">修正</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </body>
 </html>
