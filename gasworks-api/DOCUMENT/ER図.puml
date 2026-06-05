@@ -1,0 +1,79 @@
+@startuml ER図
+!theme plain
+
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+entity "users" as users {
+  * id: BIGINT <<PK>>
+  --
+  * name: VARCHAR(255)
+  * email: VARCHAR(255) <<UK>>
+  * password: VARCHAR(255)
+  * role: VARCHAR(50) -- 'ADMIN', 'WORKER'
+  --
+  * created_at: TIMESTAMP
+  * updated_at: TIMESTAMP
+}
+
+entity "customers" as customers {
+  * id: BIGINT <<PK>>
+  --
+  * name: VARCHAR(255)
+  * address: VARCHAR(255)
+  * contact: VARCHAR(50)
+  latitude: DECIMAL(9, 6)
+  longitude: DECIMAL(9, 6)
+  --
+  * created_at: TIMESTAMP
+}
+
+entity "assignments" as assignments {
+  * id: BIGINT <<PK>>
+  --
+  * user_id: BIGINT <<FK>>
+  * customer_id: BIGINT <<FK>>
+  * scheduled_date: DATE
+  * status: VARCHAR(20) -- 'PENDING', 'COMPLETED', 'SKIPPED'
+}
+
+entity "notifications" as notifications {
+  * id: BIGINT <<PK>>
+  --
+  * title: VARCHAR(255)
+  summary: TEXT
+  * content: TEXT
+  * category: VARCHAR(20) -- 'ALERT', 'WARN', 'INFO'
+  * published_at: TIMESTAMP
+}
+
+entity "user_notifications" as user_notifications {
+  * user_id: BIGINT <<PK, FK>>
+  * notification_id: BIGINT <<PK, FK>>
+  --
+  * is_read: BOOLEAN
+  read_at: TIMESTAMP
+}
+
+entity "meter_readings" as meter_readings {
+  * id: BIGINT <<PK>>
+  --
+  * assignment_id: BIGINT <<FK>>
+  * value: DECIMAL(10, 2)
+  image_path: VARCHAR(500)
+  * reading_at: TIMESTAMP
+  --
+  * created_at: TIMESTAMP
+}
+
+' Relationships
+users ||--o{ assignments : "assigned to"
+customers ||--o{ assignments : "has"
+assignments ||--o{ meter_readings : "results in"
+users ||--o{ user_notifications : "receives"
+notifications ||--o{ user_notifications : "notified via"
+
+@enduml
