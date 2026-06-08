@@ -8,11 +8,11 @@
 
 | ディレクトリ名 | 役割 | 技術スタック | デフォルトポート |
 | :--- | :--- | :--- | :--- |
-| `gasworks-api` | 共通基盤REST API / DB管理 | Spring Boot / MySQL | `8080` |
-| `gasworks-worker-ui` | 作業員向けモバイルWeb UI | Spring Boot / Thymeleaf / H2 | `8081` |
+| `gasworks-api` | 共通基盤REST API / DB管理 | Spring Boot | `8080` |
+| `gasworks-worker-ui` | 作業員向けモバイルWeb UI | Spring Boot / Thymeleaf | `8081` |
 | `gasworks-hp-ui` | 一般顧客向けホームページ | React 19 / TypeScript 6 / Vite 8 | `5173` |
 | `gasworks-admin-ui` | 管理者向け運用画面 | Django (Python) | `8000` |
-| `gasworks-batch` | 請求・集計バッチ処理 | Spring Batch / H2 | (実行時のみ) |
+| `gasworks-batch` | 請求・集計バッチ処理 | Spring Batch | (実行時のみ) |
 | `DOCUMENT` | プロジェクト全体の共通設計書 | Markdown / PlantUML | - |
 
 ---
@@ -28,9 +28,7 @@
 ## 4. 開発の始め方（各プロジェクトの起動）
 
 VSCodeで `gasworks` フォルダを開いた状態で、下部のターミナル（`Ctrl + @`）から各プロジェクトを起動します。
-**重要：ターミナルは PowerShell (推奨) または コマンドプロンプト を使用してください。**
-また、ログの確認と管理を容易にするため、各プロジェクトは必ず「新しいターミナルタブ」を作成して個別に起動してください。
-※ 一つのターミナルで複数を同時に動かすことはできません。
+**重要：必ず各プロジェクトのディレクトリに移動（cd）してからコマンドを実行してください。**
 
 ### Project 3: API サーバー (最優先で起動)
 ```bash
