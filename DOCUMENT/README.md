@@ -8,11 +8,11 @@
 
 | ディレクトリ名 | 役割 | 技術スタック | デフォルトポート |
 | :--- | :--- | :--- | :--- |
-| `gasworks-api` | 共通基盤REST API / DB管理 | Spring Boot | `8080` |
-| `gasworks-worker-ui` | 作業員向けモバイルWeb UI | Spring Boot / Thymeleaf | `8081` |
+| `gasworks-api` | 共通基盤REST API / DB管理 | Spring Boot / H2 (MySQL Mode) | `8081` |
+| `gasworks-worker-ui` | 作業員向けモバイルWeb UI | Spring Boot / Thymeleaf / H2 | `8081` |
 | `gasworks-hp-ui` | 一般顧客向けホームページ | React 19 / TypeScript 6 / Vite 8 | `5173` |
 | `gasworks-admin-ui` | 管理者向け運用画面 | Django (Python) | `8000` |
-| `gasworks-batch` | 請求・集計バッチ処理 | Spring Batch | (実行時のみ) |
+| `gasworks-batch` | 請求・集計バッチ処理 | Spring Batch / H2 | (実行時のみ) |
 | `DOCUMENT` | プロジェクト全体の共通設計書 | Markdown / PlantUML | - |
 
 ---
@@ -28,7 +28,9 @@
 ## 4. 開発の始め方（各プロジェクトの起動）
 
 VSCodeで `gasworks` フォルダを開いた状態で、下部のターミナル（`Ctrl + @`）から各プロジェクトを起動します。
-**重要：必ず各プロジェクトのディレクトリに移動（cd）してからコマンドを実行してください。**
+**重要：ターミナルは PowerShell (推奨) または コマンドプロンプト を使用してください。**
+また、各プロジェクトは「新しいターミナルタブ」を作成して個別に起動してください（1つのタブで複数は動かせません）。
+※ 必ず各プロジェクトのディレクトリに移動（cd）してからコマンドを実行してください。
 
 ### Project 3: API サーバー (最優先で起動)
 ```bash
@@ -89,8 +91,9 @@ python manage.py runserver
 
 *   **わからないことはAIに質問！**: **何がどうわからないか**を明確にし、**限定的**かつ**専門的な用語**をなるべく入れて、まずはAIに聞いてみてください。
 *   **ディレクトリに注意**: ターミナルで `mvnw` や `npm` コマンドが「見つかりません」となる場合、ほとんどが実行ディレクトリ間違い（`cd` 忘れ）です。
-*   **ポートの競合**: 他のアプリでポートを使っているとエラーになります。その場合はプロジェクトの `application.properties` 等でポート番号を変更してください。
-*   **DB接続**: APIを起動する前に、Docker等でMySQLが立ち上がっていることを確認してください。
+*   **ポートの競合**: `gasworks-api` と `gasworks-worker-ui` がデフォルトで同じ `8081` を使用する設定になっているため、同時に起動する場合はどちらかの `application.properties` の `server.port` を変更する必要があります。
+*   **DBの確認方法**: VSCode拡張機能の 「Database Client」 を使うと、H2もMySQLもGUIで簡単に中身を確認できます。
+*   **APIのDB接続**: 現在のコード設定ではインメモリDB（H2）を使用しており、再起動のたびにデータが初期化されます。
 *   **困ったら `git status`**: Gitで今何が起きているか分からなくなったら、まずこのコマンドを打って状況を確認しましょう。
 
 ---

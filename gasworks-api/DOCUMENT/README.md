@@ -8,7 +8,7 @@
 
 | ディレクトリ名 | 役割 | 技術スタック | デフォルトポート |
 | :--- | :--- | :--- | :--- |
-| `gasworks-api` | 共通基盤REST API / DB管理 | Spring Boot / MySQL | `8080` |
+| `gasworks-api` | 共通基盤REST API / DB管理 | Spring Boot / H2 (MySQL Mode) | `8081` |
 | `gasworks-worker-ui` | 作業員向けモバイルWeb UI | Spring Boot / Thymeleaf / H2 | `8081` |
 | `gasworks-hp-ui` | 一般顧客向けホームページ | React 19 / TypeScript 6 / Vite 8 | `5173` |
 | `gasworks-admin-ui` | 管理者向け運用画面 | Django (Python) | `8000` |
@@ -91,8 +91,9 @@ python manage.py runserver
 
 *   **わからないことはAIに質問！**: **何がどうわからないか**を明確にし、**限定的**かつ**専門的な用語**をなるべく入れて、まずはAIに聞いてみてください。
 *   **ディレクトリに注意**: ターミナルで `mvnw` や `npm` コマンドが「見つかりません」となる場合、ほとんどが実行ディレクトリ間違い（`cd` 忘れ）です。
-*   **ポートの競合**: 他のアプリでポートを使っているとエラーになります。その場合はプロジェクトの `application.properties` 等でポート番号を変更してください。
-*   **DB接続**: APIを起動する前に、Docker等でMySQLが立ち上がっていることを確認してください。
+*   **DBの確認方法**: VSCode拡張機能の **「Database Client」** を使うと、H2もMySQLもGUIで簡単に確認できます。
+*   **APIのDB接続**: 現在のコード設定ではインメモリDB（H2）を使用しており、再起動のたびにデータが初期化されます。
+*   **ポートの競合**: `gasworks-api` は `8081` ポートを使用します。他のプロジェクトと重複しないよう注意してください。
 *   **困ったら `git status`**: Gitで今何が起きているか分からなくなったら、まずこのコマンドを打って状況を確認しましょう。
 
 ---
