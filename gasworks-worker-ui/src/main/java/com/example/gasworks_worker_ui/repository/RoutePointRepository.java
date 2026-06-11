@@ -1,43 +1,36 @@
 package com.example.gasworks_worker_ui.repository;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.client.RestTemplate;
+
+import com.example.gasworks_worker_ui.entity.RoutePoint;
 
 import java.util.List;
 
-import org.springframework.stereotype.Repository;
-
-import com.example.gasworks_worker_ui.Category.MapCategory;
-import com.example.gasworks_worker_ui.entity.RoutePoint;
-
 @Repository
 public class RoutePointRepository {
-    public List<RoutePoint> findTodayRoute() {
-        return List.of(
-    new RoutePoint(
-        "1",
-        "東京駅",
-        35.681236,
-        139.767125,
-        1,
-        MapCategory.START
-    ),
-    new RoutePoint(
-        "2",
-        "上野駅",
-        35.713768,
-        139.777254,
-        2,
-        MapCategory.WAYPOINT
-    ),
-    new RoutePoint(
-        "3",
-        "浅草駅",
-        35.710063,
-        139.810700,
-        3,
-        MapCategory.END
-    )
-);
+    private final RestTemplate restTemplate = new RestTemplate();
+
+    private static final String API_URL = "http://localhost:8081/customers";
+
+    public List<RoutePoint> findAll() {
+
+        ResponseEntity<List<RoutePoint>> response = restTemplate.exchange(
+            API_URL,
+            HttpMethod.GET,
+            null,
+            new ParameterizedTypeReference<List<RoutePoint>>() {}
+            );
+            List<RoutePoint> routePoints = response.getBody();
+
+        return routePoints;
+
     }
+
 }
+
 // return List.of(
 //             new RoutePoint(
 //                 "1",
