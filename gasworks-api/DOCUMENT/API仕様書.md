@@ -9,59 +9,23 @@
 
 - すべてのエンドポイントは、原則として認証が必要です。
 - 認証方式は `JWT (JSON Web Token)` を利用します。
-- ログインAPIで取得したトークンを、以降のリクエストヘッダーに `Authorization: Bearer <token>` の形式で付与します。
+- ログインAPIで取得したトークンを、以降のリクエストヘッダーに `Authorization: Bearer <token>` の形式で付与してください。
 
-## 3. エンドポイント一覧
+## 3. エンドポイント
 
-### 3.1. 認証 (`/auth`)
+### 3.1. ログイン (`POST /api/auth/login`)
+ユーザー認証を行い、JWTトークンを発行します。
 
-| メソッド | URI | 説明 |
-|:---|:---|:---|
-| `POST` | `/auth/login` | ログイン処理。成功時、JWTを返す。 |
-| `POST` | `/auth/logout` | ログアウト処理。 |
+#### 3.1.1. リクエスト例
+```json
+{
+  "email": "worker@example.com",
+  "password": "password123"
+}
+```
 
-### 3.2. 作業割当 (`/assignments`)
-
-| メソッド | URI | 説明 |
-|:---|:---|:---|
-| `GET` | `/assignments` | ログイン中の作業員に割り当てられた作業一覧（当日分など）を取得する。 |
-| `GET` | `/assignments/summary` | 本日の作業進捗（完了数/全体数）を取得する（日報用）。 |
-| `GET` | `/assignments/{id}` | 指定した割当の詳細情報を取得する。 |
-
-### 3.3. 検針データ (`/meter-readings`)
-
-| メソッド | URI | 説明 |
-|:---|:---|:---|
-| `GET` | `/meter-readings` | 検針データの一覧を取得する。 |
-| `GET` | `/meter-readings/{id}` | 指定したIDの検針データを取得する。 |
-| `POST` | `/meter-readings` | 新しい検針データを登録する（写真URL、割当IDを含む）。 |
-
-### 3.4. お知らせ (`/notifications`)
-
-| メソッド | URI | 説明 |
-|:---|:---|:---|
-| `GET` | `/notifications` | ログインユーザー向けのお知らせ一覧を取得する（既読状態を含む）。 |
-| `GET` | `/notifications/{id}` | お知らせの詳細を取得する。 |
-| `POST` | `/notifications/{id}/read` | 指定したお知らせを既読状態にする。 |
-
-### 3.5. 緊急連絡 (`/emergency`)
-
-| メソッド | URI | 説明 |
-|:---|:---|:---|
-| `POST` | `/emergency` | 現在地情報と共に緊急事態を本部に通報する。 |
-
-### 3.6. 顧客情報 (`/customers`)
-
-| メソッド | URI | 説明 |
-|:---|:---|:---|
-| `GET` | `/customers` | 顧客情報の一覧を取得する。 |
-| `GET` | `/customers/{id}` | 指定したIDの顧客情報を取得する。 |
-
----
-
-## 4. データ形式 (JSON)
-
-### 認証レスポンス
+#### 3.1.2. レスポンス
+ステータスコード: 200 OK
 ```json
 {
   "token": "eyJhbGci...",
@@ -73,23 +37,58 @@
 }
 ```
 
-### 作業割当 (Assignment)
+#### 3.1.3. フィールド定義
+| フィールド名 | 型 | 説明 | 必須 |
+| :--- | :--- | :--- | :--- |
+| token | String | JWT認証トークン | ○ |
+| user.id | Long | ユーザーID | ○ |
+| user.name | String | 表示名 | ○ |
+| user.role | String | 権限 (ADMIN, WORKER) | ○ |
+
+---
+
+### 3.2. 作業割当一覧取得 (`GET /api/assignments`)
+ログイン中の作業員に割り当てられた作業一覧を取得します。
+
+#### 3.2.1. リクエスト
+クエリパラメータ: `scheduledDate` (任意。形式: YYYY-MM-DD)
+
+#### 3.2.2. レスポンス
+ステータスコード: 200 OK
 ```json
-{
-  "id": 501,
-  "scheduledDate": "2023-10-27",
-  "status": "PENDING",
-  "customer": {
-    "id": 101,
-    "name": "山田 太郎",
-    "address": "東京都千代田区...",
-    "latitude": 35.681236,
-    "longitude": 139.767125
+[
+  {
+    "id": 501,
+    "scheduledDate": "2024-10-27",
+    "status": "PENDING",
+    "customer": {
+      "id": 101,
+      "name": "山田 太郎",
+      "address": "東京都千代田区...",
+      "latitude": 35.681236,
+      "longitude": 139.767125
+    }
   }
-}
+]
 ```
 
-### 作業サマリー (AssignmentSummary)
+#### 3.2.3. フィールド定義
+| フィールド名 | 型 | 説明 | 必須 |
+| :--- | :--- | :--- | :--- |
+| id | Long | 作業割当ID | ○ |
+| scheduledDate | String | 予定日 (ISO 8601) | ○ |
+| status | String | 状態 (PENDING, COMPLETED, SKIPPED) | ○ |
+| customer.name | String | 顧客名 | ○ |
+| customer.latitude | Double | 緯度 | △ |
+| customer.longitude| Double | 経度 | △ |
+
+---
+
+### 3.3. 作業サマリー取得 (`GET /api/assignments/summary`)
+本日の作業進捗状況を取得します。
+
+#### 3.3.1. レスポンス
+ステータスコード: 200 OK
 ```json
 {
   "totalCount": 20,
@@ -98,27 +97,100 @@
 }
 ```
 
-### 検針データ (MeterReading)
+#### 3.3.2. フィールド定義
+| フィールド名 | 型 | 説明 | 必須 |
+| :--- | :--- | :--- | :--- |
+| totalCount | Integer | 全作業数 | ○ |
+| completedCount | Integer | 完了済み数 | ○ |
+| skippedCount | Integer | スキップ数 | ○ |
 
+---
+
+### 3.4. 作業詳細取得 (`GET /api/assignments/{id}`)
+指定した作業割当の詳細情報を取得します。
+
+#### 3.4.1. レスポンス
+ステータスコード: 200 OK
 ```json
 {
-  "id": 1,
+  "id": 501,
+  "scheduledDate": "2024-10-27",
+  "status": "PENDING",
+  "customer": {
+    "id": 101,
+    "name": "山田 太郎",
+    "address": "東京都千代田区...",
+    "contact": "03-1234-5678",
+    "latitude": 35.681236,
+    "longitude": 139.767125
+  }
+}
+```
+
+---
+
+### 3.5. 検針データ登録 (`POST /api/meter-readings`)
+検針結果とメーター写真を登録します。登録成功時、該当する `assignments` のステータスは `COMPLETED` に更新されます。
+
+#### 3.5.1. リクエスト
+```json
+{
   "assignmentId": 501,
   "value": 1234.5,
-  "imagePath": "https://storage.example.com/meter/photo1.jpg",
-  "readingAt": "2023-10-27T10:00:00Z"
+  "imagePath": "/storage/meter/photo_501.jpg"
 }
 ```
 
-### 顧客 (Customer)
-
+#### 3.5.2. レスポンス
+ステータスコード: 201 Created
 ```json
 {
-  "id": 101,
-  "name": "山田 太郎",
-  "address": "東京都千代田区...",
-  "contact": "03-1234-5678",
-  "createdAt": "2023-10-27T10:00:00Z",
-  "updatedAt": "2023-10-27T10:00:00Z"
+  "id": 1001,
+  "assignmentId": 501,
+  "value": 1234.5,
+  "readingAt": "2024-10-27T10:00:00Z"
 }
 ```
+
+#### 3.5.3. フィールド定義
+| フィールド名 | 型 | 説明 | 必須 |
+| :--- | :--- | :--- | :--- |
+| assignmentId | Long | 作業割当ID | ○ |
+| value | Double | 検針値 | ○ |
+| imagePath | String | メーター写真のファイルパス | △ |
+
+---
+
+### 3.6. お知らせ一覧取得 (`GET /api/notifications`)
+ログイン中の作業員向けのお知らせ一覧（既読状態含む）を取得します。
+
+#### 3.6.1. レスポンス
+ステータスコード: 200 OK
+```json
+[
+  {
+    "id": "1",
+    "title": "【重要】台風接近に伴う作業中止の判断について",
+    "summary": "台風接近に伴う対応について",
+    "content": "本日の午後以降の検針作業は、天候の状況により各自の判断で中止してください...",
+    "publishedAt": "2024-07-26T10:00:00+09:00",
+    "category": "IMPORTANT",
+    "isRead": false
+  }
+]
+```
+
+---
+
+### 3.7. 緊急通報 (`POST /api/emergency`)
+現場での事故やトラブルを本部に通知します。
+
+#### 3.6.2. レスポンス
+ステータスコード: 200 OK
+
+#### 3.6.3. フィールド定義
+| フィールド名 | 型 | 説明 | 必須 |
+| :--- | :--- | :--- | :--- |
+| latitude | Double | 現在地の緯度 | ○ |
+| longitude | Double | 現在地の経度 | ○ |
+| message | String | 通報メッセージ | △ |

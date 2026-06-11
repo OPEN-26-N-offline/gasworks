@@ -8,7 +8,7 @@
 
 | ディレクトリ名 | 役割 | 技術スタック | デフォルトポート |
 | :--- | :--- | :--- | :--- |
-| `gasworks-api` | 共通基盤REST API / DB管理 | Spring Boot / H2 (MySQL Mode) | `8081` |
+| `gasworks-api` | 共通基盤REST API / DB管理 | Spring Boot / H2 (MySQL Mode) | `8080` |
 | `gasworks-worker-ui` | 作業員向けモバイルWeb UI | Spring Boot / Thymeleaf / H2 | `8081` |
 | `gasworks-hp-ui` | 一般顧客向けホームページ | React 19 / TypeScript 6 / Vite 8 | `5173` |
 | `gasworks-admin-ui` | 管理者向け運用画面 | Django (Python) | `8000` |
@@ -27,12 +27,10 @@
 
 ## 4. 開発の始め方（各プロジェクトの起動）
 
-VSCodeで `gasworks` フォルダを開いた状態で、下部のターミナル（`Ctrl + @`）から各プロジェクトを起動します。
+VSCodeで `gasworks-api` ディレクトリを作業場として起動します。
 **重要：ターミナルは PowerShell (推奨) または コマンドプロンプト を使用してください。**
-また、ログの確認と管理を容易にするため、各プロジェクトは必ず「新しいターミナルタブ」を作成して個別に起動してください。
-※ 一つのターミナルで複数を同時に動かすことはできません。
 
-### Project 3: API サーバー (最優先で起動)
+### API サーバーの起動
 ```bash
 cd gasworks-api
 mvnw spring-boot:run
