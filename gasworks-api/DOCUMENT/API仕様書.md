@@ -11,12 +11,12 @@
 - 認証方式は `JWT (JSON Web Token)` を利用します。
 - ログインAPIで取得したトークンを、以降のリクエストヘッダーに `Authorization: Bearer <token>` の形式で付与してください。
 
-## 3. エンドポイント一覧
+## 3. エンドポイント
 
 ### 3.1. ログイン (`POST /api/auth/login`)
 ユーザー認証を行い、JWTトークンを発行します。
 
-#### 3.1.1. リクエスト
+#### 3.1.1. リクエスト例
 ```json
 {
   "email": "worker@example.com",
@@ -130,14 +130,42 @@
 ---
 
 ### 3.5. 検針データ登録 (`POST /api/meter-readings`)
-検針結果とメーター写真を登録します。登録成功時、該当する assignments のステータスは COMPLETED に更新されます。
+検針結果とメーター写真を登録します。登録成功時、該当する `assignments` のステータスは `COMPLETED` に更新されます。
+
+#### 3.5.1. リクエスト
+```json
+{
+  "assignmentId": 501,
+  "value": 1234.5,
+  "imagePath": "/storage/meter/photo_501.jpg"
+}
+```
+
+#### 3.5.2. レスポンス
+ステータスコード: 201 Created
+```json
+{
+  "id": 1001,
+  "assignmentId": 501,
+  "value": 1234.5,
+  "readingAt": "2024-10-27T10:00:00Z"
+}
+```
+
+#### 3.5.3. フィールド定義
+| フィールド名 | 型 | 説明 | 必須 |
+| :--- | :--- | :--- | :--- |
+| assignmentId | Long | 作業割当ID | ○ |
+| value | Double | 検針値 | ○ |
+| imagePath | String | メーター写真のファイルパス | △ |
 
 ---
 
 ### 3.6. お知らせ一覧取得 (`GET /api/notifications`)
-作業員向けのお知らせ一覧を取得します。
+ログイン中の作業員向けのお知らせ一覧（既読状態含む）を取得します。
 
 #### 3.6.1. レスポンス
+ステータスコード: 200 OK
 ```json
 [
   {
