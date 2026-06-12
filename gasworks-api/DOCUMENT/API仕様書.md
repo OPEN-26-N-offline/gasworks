@@ -78,7 +78,9 @@
 | id | Long | 作業割当ID | ○ |
 | scheduledDate | String | 予定日 (ISO 8601) | ○ |
 | status | String | 状態 (PENDING, COMPLETED, SKIPPED) | ○ |
+| customer.id | Long | 顧客ID | ○ |
 | customer.name | String | 顧客名 | ○ |
+| customer.address | String | 住所 | ○ |
 | customer.latitude | Double | 緯度 | △ |
 | customer.longitude| Double | 経度 | △ |
 
